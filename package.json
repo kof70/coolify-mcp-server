@@ -1,0 +1,59 @@
+{
+  "name": "coolify-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server for Coolify API - Control your self-hosted PaaS from AI assistants",
+  "type": "module",
+  "main": "build/index.js",
+  "bin": {
+    "coolify-mcp": "build/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node build/index.js",
+    "dev": "tsx src/index.ts",
+    "test": "node --test",
+    "lint": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "mcp",
+    "coolify",
+    "api",
+    "server",
+    "modelcontextprotocol",
+    "claude",
+    "ai",
+    "paas",
+    "self-hosted",
+    "deployment",
+    "docker"
+  ],
+  "author": "kof",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kof70/coolify-mcp-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kof70/coolify-mcp-server/issues"
+  },
+  "homepage": "https://github.com/kof70/coolify-mcp-server#readme",
+  "files": [
+    "build",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.5.0",
+    "axios": "^1.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.24",
+    "tsx": "^4.0.0",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
