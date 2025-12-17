@@ -11,7 +11,7 @@ import {
 } from '@modelcontextprotocol/sdk/types.js';
 
 import { CoolifyClient } from './client.js';
-import { toolDefinitions, handleTool } from './tools/index.js';
+import { getToolDefinitions, handleTool, isReadOnlyMode, READ_ONLY_TOOLS } from './tools/index.js';
 import { resourceDefinitions, readResource } from './resources/index.js';
 
 class CoolifyMcpServer {
@@ -32,9 +32,9 @@ class CoolifyMcpServer {
   }
 
   private setupHandlers() {
-    // List available tools
+    // List available tools (filtered by read-only mode)
     this.server.setRequestHandler(ListToolsRequestSchema, async () => ({
-      tools: toolDefinitions
+      tools: getToolDefinitions()
     }));
 
     // Handle tool calls
@@ -44,6 +44,14 @@ class CoolifyMcpServer {
       }
 
       const { name, arguments: args } = request.params;
+
+      // Block write operations in read-only mode
+      if (isReadOnlyMode() && !READ_ONLY_TOOLS.includes(name)) {
+        throw new McpError(
+          ErrorCode.InvalidRequest,
+          `Operation '${name}' is not allowed in read-only mode. Set COOLIFY_READONLY=false to enable write operations.`
+        );
+      }
 
       try {
         const result = await handleTool(this.client, name, args || {});
@@ -104,7 +112,12 @@ class CoolifyMcpServer {
     
     // Detect Coolify version for feature compatibility
     const version = await this.client.detectVersion();
-    console.error(`Connected to Coolify ${version.version}`);
+    const mode = isReadOnlyMode() ? 'READ-ONLY' : 'FULL ACCESS';
+    console.error(`Connected to Coolify ${version.version} [${mode}]`);
+    
+    if (isReadOnlyMode()) {
+      console.error('Read-only mode enabled: write operations are disabled');
+    }
 
     this.setupHandlers();
 

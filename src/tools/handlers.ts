@@ -1,13 +1,45 @@
 import { CoolifyClient } from '../client.js';
 import { ErrorCode, McpError } from '@modelcontextprotocol/sdk/types.js';
+import { isConfirmRequired, isDangerousOperation, getDangerWarning } from './definitions.js';
 
 type ToolArgs = Record<string, unknown>;
+
+/**
+ * Check if a dangerous operation has been confirmed
+ * Returns an error response if confirmation is required but not provided
+ */
+function checkConfirmation(name: string, args: ToolArgs): { confirmed: boolean; response?: object } {
+  if (!isConfirmRequired() || !isDangerousOperation(name)) {
+    return { confirmed: true };
+  }
+
+  if (args.confirm === true) {
+    return { confirmed: true };
+  }
+
+  return {
+    confirmed: false,
+    response: {
+      confirmation_required: true,
+      action: name,
+      warning: getDangerWarning(name),
+      message: `This is a dangerous operation. To proceed, call again with confirm: true`,
+      example: { ...args, confirm: true }
+    }
+  };
+}
 
 export async function handleTool(
   client: CoolifyClient,
   name: string,
   args: ToolArgs
 ): Promise<unknown> {
+  // Check confirmation for dangerous operations
+  const confirmCheck = checkConfirmation(name, args);
+  if (!confirmCheck.confirmed) {
+    return confirmCheck.response;
+  }
+
   switch (name) {
     // Version & Health
     case 'get_version':
@@ -151,6 +183,10 @@ export async function handleTool(
       requireParam(args, 'uuid');
       return client.get(`/services/${args.uuid}/restart`);
 
+    case 'get_service_logs':
+      requireParam(args, 'uuid');
+      return client.get(`/services/${args.uuid}/logs`, { lines: args.lines || 100 });
+
     // Databases
     case 'list_databases':
       return client.get('/databases');
@@ -162,6 +198,10 @@ export async function handleTool(
       requireParam(args, 'environment_name');
       requireParam(args, 'server_uuid');
       return client.post('/databases', args);
+
+    case 'get_database_logs':
+      requireParam(args, 'uuid');
+      return client.get(`/databases/${args.uuid}/logs`, { lines: args.lines || 100 });
 
     // Deployments
     case 'list_deployments':

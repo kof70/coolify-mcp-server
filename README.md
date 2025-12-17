@@ -1,6 +1,7 @@
 # Coolify MCP Server
 
 [![npm version](https://badge.fury.io/js/coolify-mcp-server.svg)](https://www.npmjs.com/package/coolify-mcp-server)
+[![CI](https://github.com/kof70/coolify-mcp-server/actions/workflows/ci.yml/badge.svg)](https://github.com/kof70/coolify-mcp-server/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js Version](https://img.shields.io/node/v/coolify-mcp-server.svg)](https://nodejs.org)
 
@@ -17,16 +18,36 @@ A Model Context Protocol (MCP) server for [Coolify](https://coolify.io) API inte
 
 ## 📦 Installation
 
-### From npm (recommended)
+### Quick Setup (Recommended)
+
+Run the interactive setup wizard:
+
+```bash
+npx coolify-mcp-server --setup
+```
+
+This will:
+1. Ask for your Coolify URL and API token
+2. Validate the connection
+3. Configure your IDE automatically (Kiro, Cursor, VS Code, Claude Desktop)
+
+### Quick Setup with Arguments
+
+```bash
+npx coolify-mcp-server --setup --url https://coolify.example.com --token your-token --ide kiro
+```
+
+### Global Installation
 
 ```bash
 npm install -g coolify-mcp-server
+coolify-mcp --setup
 ```
 
-### From source
+### From Source
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/coolify-mcp-server.git
+git clone https://github.com/kof70/coolify-mcp-server.git
 cd coolify-mcp-server
 npm install
 npm run build
@@ -41,6 +62,75 @@ npm run build
 | `COOLIFY_BASE_URL` | Yes | Your Coolify instance URL (e.g., `https://coolify.example.com`) |
 | `COOLIFY_TOKEN` | Yes | API token from Coolify |
 | `COOLIFY_TEAM_ID` | No | Team ID for multi-team setups |
+| `COOLIFY_READONLY` | No | Set to `true` for read-only mode (safe monitoring) |
+| `COOLIFY_REQUIRE_CONFIRM` | No | Set to `true` to require confirmation for dangerous operations |
+
+### 🔒 Read-Only Mode
+
+For safe monitoring without risk of accidental changes, enable read-only mode:
+
+```json
+{
+  "mcpServers": {
+    "coolify": {
+      "command": "coolify-mcp",
+      "env": {
+        "COOLIFY_BASE_URL": "https://your-coolify.com",
+        "COOLIFY_TOKEN": "your-api-token",
+        "COOLIFY_READONLY": "true"
+      }
+    }
+  }
+}
+```
+
+In read-only mode, only these operations are available:
+- `get_*` - Get details of resources
+- `list_*` - List resources
+- `health_check` - Check API health
+
+All write operations (`create_*`, `start_*`, `stop_*`, `restart_*`, `deploy_*`, `execute_command`) are disabled.
+
+### ⚠️ Confirmation for Dangerous Operations
+
+For extra safety, you can require confirmation before executing dangerous operations:
+
+```json
+{
+  "mcpServers": {
+    "coolify": {
+      "command": "coolify-mcp",
+      "env": {
+        "COOLIFY_BASE_URL": "https://your-coolify.com",
+        "COOLIFY_TOKEN": "your-api-token",
+        "COOLIFY_REQUIRE_CONFIRM": "true"
+      }
+    }
+  }
+}
+```
+
+When enabled, these operations require explicit confirmation:
+- `stop_application`, `restart_application`
+- `stop_service`, `restart_service`
+- `deploy_application`
+- `execute_command`
+
+Without `confirm: true`, these operations return a warning:
+```json
+{
+  "confirmation_required": true,
+  "action": "stop_application",
+  "warning": "This will stop the application and make it unavailable until restarted.",
+  "message": "This is a dangerous operation. To proceed, call again with confirm: true",
+  "example": { "uuid": "abc123", "confirm": true }
+}
+```
+
+To execute, call again with `confirm: true`:
+```
+stop_application({ uuid: "abc123", confirm: true })
+```
 
 ### Getting an API Token
 
@@ -161,12 +251,14 @@ Add to your `.kiro/settings/mcp.json`:
 | `start_service` | Start a service |
 | `stop_service` | Stop a service |
 | `restart_service` | Restart a service |
+| `get_service_logs` | Get service logs |
 
 ### Databases
 | Tool | Description |
 |------|-------------|
 | `list_databases` | List all databases |
 | `create_database` | Create a new database (PostgreSQL, MySQL, MongoDB, Redis) |
+| `get_database_logs` | Get database logs |
 
 ### Deployments
 | Tool | Description |

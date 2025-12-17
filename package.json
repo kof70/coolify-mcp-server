@@ -1,17 +1,20 @@
 {
   "name": "coolify-mcp-server",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "MCP server for Coolify API - Control your self-hosted PaaS from AI assistants",
   "type": "module",
   "main": "build/index.js",
   "bin": {
-    "coolify-mcp": "build/index.js"
+    "coolify-mcp": "build/cli.js",
+    "coolify-mcp-server": "build/cli.js"
   },
   "scripts": {
     "build": "tsc",
     "start": "node build/index.js",
     "dev": "tsx src/index.ts",
-    "test": "node --test",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "lint": "tsc --noEmit",
     "prepublishOnly": "npm run build"
   },
@@ -50,8 +53,10 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.24",
+    "@vitest/coverage-v8": "^4.0.16",
     "tsx": "^4.0.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "vitest": "^4.0.16"
   },
   "engines": {
     "node": ">=18"

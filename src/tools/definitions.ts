@@ -1,5 +1,74 @@
 // Tool definitions with detailed schemas and documentation
-export const toolDefinitions = [
+
+// Read-only tools that only fetch data without modifying anything
+export const READ_ONLY_TOOLS = [
+  'get_version',
+  'health_check',
+  'list_teams',
+  'get_team',
+  'get_current_team',
+  'get_current_team_members',
+  'list_servers',
+  'get_server_resources',
+  'get_server_domains',
+  'list_projects',
+  'get_project',
+  'list_environments',
+  'list_applications',
+  'get_application',
+  'get_application_logs',
+  'list_services',
+  'get_service_logs',
+  'list_databases',
+  'get_database_logs',
+  'list_deployments',
+  'get_deployment',
+  'list_private_keys'
+];
+
+// Dangerous operations that require confirmation when COOLIFY_REQUIRE_CONFIRM=true
+export const DANGEROUS_OPERATIONS = [
+  'stop_application',
+  'restart_application',
+  'stop_service',
+  'restart_service',
+  'deploy_application',
+  'execute_command'
+];
+
+// Warning messages for dangerous operations
+export const DANGER_WARNINGS: Record<string, string> = {
+  stop_application: 'This will stop the application and make it unavailable until restarted.',
+  restart_application: 'This will restart the application, causing brief downtime.',
+  stop_service: 'This will stop the service and make it unavailable until restarted.',
+  restart_service: 'This will restart the service, causing brief downtime.',
+  deploy_application: 'This will deploy a new version of the application, which may cause downtime.',
+  execute_command: 'This will execute a command inside the application container.'
+};
+
+/**
+ * Check if confirmation is required for dangerous operations
+ */
+export function isConfirmRequired(): boolean {
+  return process.env.COOLIFY_REQUIRE_CONFIRM === 'true';
+}
+
+/**
+ * Check if an operation is dangerous
+ */
+export function isDangerousOperation(toolName: string): boolean {
+  return DANGEROUS_OPERATIONS.includes(toolName);
+}
+
+/**
+ * Get warning message for a dangerous operation
+ */
+export function getDangerWarning(toolName: string): string {
+  return DANGER_WARNINGS[toolName] || 'This is a potentially dangerous operation.';
+}
+
+// All tool definitions
+const allToolDefinitions = [
   // === Version & Health ===
   {
     name: 'get_version',
@@ -185,43 +254,51 @@ export const toolDefinitions = [
   },
   {
     name: 'stop_application',
-    description: 'Stop an application',
+    description: 'Stop an application. When COOLIFY_REQUIRE_CONFIRM=true, requires confirm: true parameter.',
     inputSchema: {
       type: 'object',
-      properties: { uuid: { type: 'string', description: 'Application UUID' } },
+      properties: {
+        uuid: { type: 'string', description: 'Application UUID' },
+        confirm: { type: 'boolean', description: 'Confirm the dangerous operation (required when COOLIFY_REQUIRE_CONFIRM=true)' }
+      },
       required: ['uuid']
     }
   },
   {
     name: 'restart_application',
-    description: 'Restart an application',
+    description: 'Restart an application. When COOLIFY_REQUIRE_CONFIRM=true, requires confirm: true parameter.',
     inputSchema: {
       type: 'object',
-      properties: { uuid: { type: 'string', description: 'Application UUID' } },
+      properties: {
+        uuid: { type: 'string', description: 'Application UUID' },
+        confirm: { type: 'boolean', description: 'Confirm the dangerous operation (required when COOLIFY_REQUIRE_CONFIRM=true)' }
+      },
       required: ['uuid']
     }
   },
   {
     name: 'deploy_application',
-    description: 'Deploy an application',
+    description: 'Deploy an application. When COOLIFY_REQUIRE_CONFIRM=true, requires confirm: true parameter.',
     inputSchema: {
       type: 'object',
       properties: {
         uuid: { type: 'string', description: 'Application UUID' },
         tag: { type: 'string', description: 'Tag to deploy (optional)' },
-        force: { type: 'boolean', description: 'Force rebuild without cache', default: false }
+        force: { type: 'boolean', description: 'Force rebuild without cache', default: false },
+        confirm: { type: 'boolean', description: 'Confirm the dangerous operation (required when COOLIFY_REQUIRE_CONFIRM=true)' }
       },
       required: ['uuid']
     }
   },
   {
     name: 'execute_command',
-    description: 'Execute a command in an application container',
+    description: 'Execute a command in an application container. When COOLIFY_REQUIRE_CONFIRM=true, requires confirm: true parameter.',
     inputSchema: {
       type: 'object',
       properties: {
         uuid: { type: 'string', description: 'Application UUID' },
-        command: { type: 'string', description: 'Command to execute' }
+        command: { type: 'string', description: 'Command to execute' },
+        confirm: { type: 'boolean', description: 'Confirm the dangerous operation (required when COOLIFY_REQUIRE_CONFIRM=true)' }
       },
       required: ['uuid', 'command']
     }
@@ -244,6 +321,18 @@ export const toolDefinitions = [
     name: 'list_services',
     description: 'List all services',
     inputSchema: { type: 'object', properties: {}, required: [] }
+  },
+  {
+    name: 'get_service_logs',
+    description: 'Get logs from a service',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        uuid: { type: 'string', description: 'Service UUID' },
+        lines: { type: 'number', description: 'Number of lines (default: 100)', default: 100 }
+      },
+      required: ['uuid']
+    }
   },
   {
     name: 'create_service',
@@ -271,19 +360,25 @@ export const toolDefinitions = [
   },
   {
     name: 'stop_service',
-    description: 'Stop a service',
+    description: 'Stop a service. When COOLIFY_REQUIRE_CONFIRM=true, requires confirm: true parameter.',
     inputSchema: {
       type: 'object',
-      properties: { uuid: { type: 'string', description: 'Service UUID' } },
+      properties: {
+        uuid: { type: 'string', description: 'Service UUID' },
+        confirm: { type: 'boolean', description: 'Confirm the dangerous operation (required when COOLIFY_REQUIRE_CONFIRM=true)' }
+      },
       required: ['uuid']
     }
   },
   {
     name: 'restart_service',
-    description: 'Restart a service',
+    description: 'Restart a service. When COOLIFY_REQUIRE_CONFIRM=true, requires confirm: true parameter.',
     inputSchema: {
       type: 'object',
-      properties: { uuid: { type: 'string', description: 'Service UUID' } },
+      properties: {
+        uuid: { type: 'string', description: 'Service UUID' },
+        confirm: { type: 'boolean', description: 'Confirm the dangerous operation (required when COOLIFY_REQUIRE_CONFIRM=true)' }
+      },
       required: ['uuid']
     }
   },
@@ -293,6 +388,18 @@ export const toolDefinitions = [
     name: 'list_databases',
     description: 'List all databases',
     inputSchema: { type: 'object', properties: {}, required: [] }
+  },
+  {
+    name: 'get_database_logs',
+    description: 'Get logs from a database',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        uuid: { type: 'string', description: 'Database UUID' },
+        lines: { type: 'number', description: 'Number of lines (default: 100)', default: 100 }
+      },
+      required: ['uuid']
+    }
   },
   {
     name: 'create_database',
@@ -346,3 +453,24 @@ export const toolDefinitions = [
     }
   }
 ];
+
+/**
+ * Check if read-only mode is enabled
+ */
+export function isReadOnlyMode(): boolean {
+  return process.env.COOLIFY_READONLY === 'true';
+}
+
+/**
+ * Get tool definitions based on mode (read-only or full access)
+ * When COOLIFY_READONLY=true, only read-only tools are exposed
+ */
+export function getToolDefinitions() {
+  if (isReadOnlyMode()) {
+    return allToolDefinitions.filter(tool => READ_ONLY_TOOLS.includes(tool.name));
+  }
+  return allToolDefinitions;
+}
+
+// Export for backward compatibility
+export const toolDefinitions = getToolDefinitions();
