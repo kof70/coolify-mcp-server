@@ -45,7 +45,7 @@ describe('Tool Handlers', () => {
 
       const result = await handleTool(mockClient, 'health_check', {});
 
-      expect(mockClient.get).toHaveBeenCalledWith('/healthcheck');
+      expect(mockClient.get).toHaveBeenCalledWith('/health');
       expect(result).toEqual(mockHealth);
     });
   });
@@ -124,7 +124,7 @@ describe('Tool Handlers', () => {
         force: true,
       });
 
-      expect(mockClient.get).toHaveBeenCalledWith('/applications/app1/deploy?force=true');
+      expect(mockClient.get).toHaveBeenCalledWith('/deploy?uuid=app1&force=true');
       expect(result).toEqual(mockResponse);
     });
 
@@ -154,13 +154,12 @@ describe('Tool Handlers', () => {
     });
 
     it('should handle get_service_logs', async () => {
-      const mockLogs = { logs: 'Service logs...' };
-      vi.mocked(mockClient.get).mockResolvedValue(mockLogs);
-
+      // This endpoint doesn't exist in Coolify API - should return error message
       const result = await handleTool(mockClient, 'get_service_logs', { uuid: 'svc1' });
 
-      expect(mockClient.get).toHaveBeenCalledWith('/services/svc1/logs', { lines: 100 });
-      expect(result).toEqual(mockLogs);
+      expect(mockClient.get).not.toHaveBeenCalled();
+      expect(result).toHaveProperty('error');
+      expect((result as { error: string }).error).toContain('not available');
     });
   });
 
@@ -176,13 +175,12 @@ describe('Tool Handlers', () => {
     });
 
     it('should handle get_database_logs', async () => {
-      const mockLogs = { logs: 'Database logs...' };
-      vi.mocked(mockClient.get).mockResolvedValue(mockLogs);
-
+      // This endpoint doesn't exist in Coolify API - should return error message
       const result = await handleTool(mockClient, 'get_database_logs', { uuid: 'db1', lines: 200 });
 
-      expect(mockClient.get).toHaveBeenCalledWith('/databases/db1/logs', { lines: 200 });
-      expect(result).toEqual(mockLogs);
+      expect(mockClient.get).not.toHaveBeenCalled();
+      expect(result).toHaveProperty('error');
+      expect((result as { error: string }).error).toContain('not available');
     });
   });
 
