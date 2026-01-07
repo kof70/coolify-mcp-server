@@ -211,15 +211,19 @@ Add to your `.kiro/settings/mcp.json`:
 | `get_team` | Get team details by ID |
 | `get_current_team` | Get current team details |
 | `get_current_team_members` | Get current team members |
+| `get_team_members` | Get members of a specific team |
 
 ### Servers
 | Tool | Description |
 |------|-------------|
 | `list_servers` | List all servers |
+| `get_server` | Get server details by UUID |
 | `create_server` | Create a new server |
+| `update_server` | Update a server |
+| `delete_server` | Delete a server |
 | `validate_server` | Validate server connection |
 | `get_server_resources` | Get server resource usage |
-| `get_server_domains` | Get server domains |
+| `get_server_domains` | Get domains configured on a server |
 
 ### Projects & Environments
 | Tool | Description |
@@ -227,8 +231,12 @@ Add to your `.kiro/settings/mcp.json`:
 | `list_projects` | List all projects |
 | `get_project` | Get project details |
 | `create_project` | Create a new project |
-| `list_environments` | List project environments |
+| `update_project` | Update a project |
+| `delete_project` | Delete a project |
+| `list_environments` | List environments in a project |
+| `get_environment` | Get environment details |
 | `create_environment` | Create a new environment |
+| `delete_environment` | Delete an environment |
 
 ### Applications
 | Tool | Description |
@@ -236,41 +244,98 @@ Add to your `.kiro/settings/mcp.json`:
 | `list_applications` | List all applications |
 | `get_application` | Get application details |
 | `create_application` | Create a new application |
+| `create_public_application` | Create from a public Git repository |
+| `create_private_github_app_application` | Create from private repo using GitHub App |
+| `create_private_deploy_key_application` | Create from private repo using deploy key |
+| `create_dockerfile_application` | Create from a Dockerfile |
+| `create_dockerimage_application` | Create from a Docker image |
+| `create_dockercompose_application` | Create from Docker Compose |
+| `update_application` | Update an application |
+| `delete_application` | Delete an application |
 | `start_application` | Start an application |
 | `stop_application` | Stop an application |
 | `restart_application` | Restart an application |
 | `deploy_application` | Deploy an application |
+| `deploy` | Deploy resources by UUID or tag |
 | `execute_command` | Execute command in container |
 | `get_application_logs` | Get application logs |
+| `get_application_deployments` | Get all deployments for an application |
+
+### Application Environment Variables
+| Tool | Description |
+|------|-------------|
+| `get_application_envs` | Get environment variables for an application |
+| `create_application_env` | Create an environment variable |
+| `update_application_env` | Update an environment variable |
+| `delete_application_env` | Delete an environment variable |
+| `update_application_envs_bulk` | Update multiple environment variables in bulk |
 
 ### Services
 | Tool | Description |
 |------|-------------|
 | `list_services` | List all services |
+| `get_service` | Get service details by UUID |
 | `create_service` | Create a new service |
+| `update_service` | Update a service |
+| `delete_service` | Delete a service |
 | `start_service` | Start a service |
 | `stop_service` | Stop a service |
 | `restart_service` | Restart a service |
-| `get_service_logs` | Get service logs |
+
+### Service Environment Variables
+| Tool | Description |
+|------|-------------|
+| `get_service_envs` | Get environment variables for a service |
+| `create_service_env` | Create an environment variable |
+| `update_service_env` | Update an environment variable |
+| `delete_service_env` | Delete an environment variable |
+| `update_service_envs_bulk` | Update multiple environment variables in bulk |
 
 ### Databases
 | Tool | Description |
 |------|-------------|
 | `list_databases` | List all databases |
-| `create_database` | Create a new database (PostgreSQL, MySQL, MongoDB, Redis) |
-| `get_database_logs` | Get database logs |
+| `get_database` | Get database details by UUID |
+| `create_database` | Create a new database (PostgreSQL, MySQL, MariaDB, MongoDB, Redis, ClickHouse, Dragonfly, KeyDB) |
+| `update_database` | Update a database |
+| `delete_database` | Delete a database |
+| `start_database` | Start a database |
+| `stop_database` | Stop a database |
+| `restart_database` | Restart a database |
+| `get_database_backups` | Get backup configurations for a database |
+| `create_database_backup` | Create a backup configuration |
 
 ### Deployments
 | Tool | Description |
 |------|-------------|
 | `list_deployments` | List all deployments |
 | `get_deployment` | Get deployment details |
+| `cancel_deployment` | Cancel a deployment in progress |
 
 ### Private Keys
 | Tool | Description |
 |------|-------------|
 | `list_private_keys` | List all SSH private keys |
+| `get_private_key` | Get a private key by UUID |
 | `create_private_key` | Create a new SSH private key |
+| `update_private_key` | Update a private key |
+| `delete_private_key` | Delete a private key |
+
+### GitHub Apps
+| Tool | Description |
+|------|-------------|
+| `list_github_apps` | List all GitHub Apps configured in Coolify |
+| `get_github_app` | Get GitHub App details by ID |
+| `create_github_app` | Create a new GitHub App configuration |
+| `update_github_app` | Update a GitHub App configuration |
+| `delete_github_app` | Delete a GitHub App configuration |
+| `get_github_app_repositories` | Get repositories accessible by a GitHub App |
+| `get_github_app_repository_branches` | Get branches of a repository |
+
+### Resources
+| Tool | Description |
+|------|-------------|
+| `list_resources` | List all resources (applications, services, databases) |
 
 ## 📚 MCP Resources
 
