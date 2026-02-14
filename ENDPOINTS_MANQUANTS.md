@@ -1,86 +1,56 @@
 # Endpoints Coolify Non Couverts Actuellement
 
-## 📋 Liste Complète des Endpoints Manquants
+Dernière mise à jour: 2026-02-14
 
-### 🔧 API Management
-- ❌ `POST /feedback` - Envoyer des commentaires (endpoint public)
-- ❌ `GET /enable` - Activer l'API
-- ❌ `GET /disable` - Désactiver l'API
+## Perimetre
 
-### 📦 Applications - Types de Création Spécialisés
-- ❌ `POST /applications/public` - Créer une application publique
-- ❌ `POST /applications/private-github-app` - Créer une application avec GitHub App privé
-- ❌ `POST /applications/private-deploy-key` - Créer une application avec clé de déploiement privée
-- ❌ `POST /applications/dockerfile` - Créer une application depuis un Dockerfile
-- ❌ `POST /applications/dockerimage` - Créer une application depuis une image Docker
-- ❌ `POST /applications/dockercompose` - Créer une application depuis Docker Compose
+Ce document liste les endpoints Coolify encore non exposes par ce MCP server,
+ou exposes avec reponse d'erreur car indisponibles dans l'API publique.
 
-### 🔐 Applications - Variables d'Environnement
-- ❌ `PATCH /applications/{uuid}/envs/bulk` - Mettre à jour plusieurs variables d'environnement en masse
+## Non exposes dans l'API publique Coolify (outils deja presents)
 
-### ☁️ Cloud Provider Tokens (6 endpoints)
-- ❌ `GET /cloud-tokens` - Lister les tokens de fournisseurs cloud
-- ❌ `POST /cloud-tokens` - Créer un token de fournisseur cloud
-- ❌ `GET /cloud-tokens/{uuid}` - Obtenir un token de fournisseur cloud
-- ❌ `PATCH /cloud-tokens/{uuid}` - Mettre à jour un token de fournisseur cloud
-- ❌ `DELETE /cloud-tokens/{uuid}` - Supprimer un token de fournisseur cloud
-- ❌ `POST /cloud-tokens/{uuid}/validate` - Valider un token de fournisseur cloud
+- `execute_command`
+- `get_service_logs`
+- `get_database_logs`
 
-### 🐙 GitHub Apps (6 endpoints)
-- ❌ `GET /github-apps` - Lister les GitHub Apps
-- ❌ `POST /github-apps` - Créer une GitHub App
-- ❌ `PATCH /github-apps/{github_app_id}` - Mettre à jour une GitHub App
-- ❌ `DELETE /github-apps/{github_app_id}` - Supprimer une GitHub App
-- ❌ `GET /github-apps/{github_app_id}/repositories` - Obtenir les dépôts d'une GitHub App
-- ❌ `GET /github-apps/{github_app_id}/repositories/{owner}/{repo}/branches` - Obtenir les branches d'un dépôt
+## Endpoints encore non implementes dans ce repository
 
-### 🖥️ Hetzner (5 endpoints)
-- ❌ `GET /hetzner/locations` - Obtenir les emplacements Hetzner disponibles
-- ❌ `GET /hetzner/server-types` - Obtenir les types de serveurs Hetzner
-- ❌ `GET /hetzner/images` - Obtenir les images Hetzner disponibles
-- ❌ `GET /hetzner/ssh-keys` - Obtenir les clés SSH Hetzner
-- ❌ `POST /servers/hetzner` - Créer un serveur Hetzner
+### API Management
+- `POST /feedback`
+- `GET /enable`
+- `GET /disable`
 
-### 🗄️ Databases - Backups Avancés (4 endpoints)
-- ❌ `GET /databases/{uuid}/backups/{scheduled_backup_uuid}/executions` - Obtenir les exécutions d'une sauvegarde planifiée
-- ❌ `PATCH /databases/{uuid}/backups/{scheduled_backup_uuid}` - Mettre à jour une configuration de sauvegarde
-- ❌ `DELETE /databases/{uuid}/backups/{scheduled_backup_uuid}` - Supprimer une configuration de sauvegarde
-- ❌ `DELETE /databases/{uuid}/backups/{scheduled_backup_uuid}/executions/{execution_uuid}` - Supprimer une exécution de sauvegarde
+### Cloud Provider Tokens
+- `GET /cloud-tokens`
+- `POST /cloud-tokens`
+- `GET /cloud-tokens/{uuid}`
+- `PATCH /cloud-tokens/{uuid}`
+- `DELETE /cloud-tokens/{uuid}`
+- `POST /cloud-tokens/{uuid}/validate`
 
-### 🔧 Services - Variables d'Environnement
-- ❌ `PATCH /services/{uuid}/envs/bulk` - Mettre à jour plusieurs variables d'environnement en masse
+### Hetzner
+- `GET /hetzner/locations`
+- `GET /hetzner/server-types`
+- `GET /hetzner/images`
+- `GET /hetzner/ssh-keys`
+- `POST /servers/hetzner`
 
-### 📡 Sentinel (Endpoint Interne)
-- ❌ `POST /sentinel/push` - Endpoint interne pour les mises à jour de serveur (non recommandé pour usage externe)
+### Database Backups avances
+- `GET /databases/{uuid}/backups/{scheduled_backup_uuid}/executions`
+- `PATCH /databases/{uuid}/backups/{scheduled_backup_uuid}`
+- `DELETE /databases/{uuid}/backups/{scheduled_backup_uuid}`
+- `DELETE /databases/{uuid}/backups/{scheduled_backup_uuid}/executions/{execution_uuid}`
 
-## 📊 Statistiques
+### Endpoint interne (non recommande)
+- `POST /sentinel/push`
 
-- **Total d'endpoints manquants** : ~30 endpoints
-- **Endpoints critiques manquants** : 
-  - Types de création d'applications spécialisés (6)
-  - Cloud Provider Tokens (6)
-  - GitHub Apps (6)
-  - Hetzner (5)
-  - Gestion avancée des backups (4)
+## Priorites suggerees
 
-## 🎯 Priorité d'Implémentation Suggérée
+1. Cloud tokens (fort impact pour provisioning automatise)
+2. Backups avances (operations de maintenance)
+3. Hetzner (cas d'usage infrastructure dedie)
+4. API management / feedback (faible criticite)
 
-### Priorité Haute 🔴
-1. **Types de création d'applications** - Nécessaires pour créer différents types d'applications
-2. **Cloud Provider Tokens** - Utiles pour l'intégration avec les fournisseurs cloud
-3. **Bulk envs updates** - Améliore l'efficacité de gestion des variables d'environnement
+## Note npm
 
-### Priorité Moyenne 🟡
-4. **GitHub Apps** - Utile pour l'intégration GitHub
-5. **Hetzner** - Utile si utilisation de Hetzner comme fournisseur
-
-### Priorité Basse 🟢
-6. **Backups avancés** - Fonctionnalités avancées de gestion des backups
-7. **API Management** - Enable/disable API (peu utilisé)
-
-## 📝 Notes
-
-- Les endpoints Sentinel sont internes et ne devraient généralement pas être exposés
-- Les endpoints de feedback sont publics et peuvent être utiles pour le support
-- Les endpoints Hetzner sont spécifiques à ce fournisseur cloud
-
+Le package npm officiel de ce repository est `coolify-mcp-server-kof70`.

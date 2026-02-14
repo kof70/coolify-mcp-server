@@ -61,9 +61,9 @@ Options:
   --version, -v        Show version
 
 Examples:
-  npx coolify-mcp-server --setup
-  npx coolify-mcp-server --setup --url https://coolify.example.com --token xxx
-  npx coolify-mcp-server --setup --ide kiro --readonly
+  npx coolify-mcp-server-kof70 --setup
+  npx coolify-mcp-server-kof70 --setup --url https://coolify.example.com --token xxx
+  npx coolify-mcp-server-kof70 --setup --ide kiro --readonly
 
 Without options, starts the MCP server (requires env vars).
 `);
@@ -97,7 +97,7 @@ function generateMcpConfig(answers: SetupAnswers): object {
     mcpServers: {
       coolify: {
         command: 'npx',
-        args: ['-y', 'coolify-mcp-server'],
+        args: ['-y', 'coolify-mcp-server-kof70'],
         env,
       },
     },
@@ -257,7 +257,7 @@ async function main(): Promise<void> {
   }
   
   if (args.includes('--version') || args.includes('-v')) {
-    console.log(`coolify-mcp-server v${VERSION}`);
+    console.log(`coolify-mcp-server-kof70 v${VERSION}`);
     process.exit(0);
   }
   

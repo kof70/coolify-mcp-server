@@ -1,149 +1,61 @@
-# Analyse des Endpoints Coolify vs MCP Server
+# Analyse Endpoints Coolify vs MCP Server
 
-## Endpoints Implémentés ✅
+Dernière mise à jour: 2026-02-14
 
-### Version & Health
-- ✅ GET /version
-- ✅ GET /health
+## Methodologie
 
-### Teams
-- ✅ GET /teams
-- ✅ GET /teams/current
-- ✅ GET /teams/current/members
-- ✅ GET /teams/{id}
+Source de verite utilisee:
+- `src/tools/definitions.ts` (outils exposes)
+- `src/tools/handlers.ts` (execution reelle)
 
-### Projects
-- ✅ GET /projects
-- ✅ GET /projects/{uuid}
-- ✅ POST /projects
-- ✅ GET /projects/{uuid}/environments
-- ✅ POST /projects/{uuid}/environments
+Verification effectuee:
+- 89 outils definis
+- 89 outils geres
+- 0 ecart definitions/handlers
 
-### Servers
-- ✅ GET /servers
-- ✅ POST /servers
-- ✅ GET /servers/{uuid}/domains
-- ✅ GET /servers/{uuid}/resources
-- ✅ GET /servers/{uuid}/validate
+## Endpoints / Outils couverts
 
-### Applications
-- ✅ GET /applications
-- ✅ GET /applications/{uuid}
-- ✅ POST /applications (générique)
-- ✅ GET /applications/{uuid}/start
-- ✅ GET /applications/{uuid}/stop
-- ✅ GET /applications/{uuid}/restart
-- ✅ GET /applications/{uuid}/logs
-- ✅ GET /deploy (via deploy_application)
-
-### Services
-- ✅ GET /services
-- ✅ POST /services
-- ✅ GET /services/{uuid}/start
-- ✅ GET /services/{uuid}/stop
-- ✅ GET /services/{uuid}/restart
-
-### Databases
-- ✅ GET /databases
-- ✅ POST /databases/{type} (tous types)
-
-### Deployments
-- ✅ GET /deployments
-- ✅ GET /deployments/{uuid}
-
-### Private Keys
-- ✅ GET /security/keys
-- ✅ POST /security/keys
-
-## Endpoints Manquants ❌
+### Core
+- 2 outils: version + health
 
 ### Teams
-- ❌ GET /teams/{id}/members
-
-### Projects
-- ❌ PATCH /projects/{uuid}
-- ❌ DELETE /projects/{uuid}
-- ❌ GET /projects/{uuid}/{environment_name_or_uuid}
-- ❌ DELETE /projects/{uuid}/environments/{environment_name_or_uuid}
+- 5 outils: list/get/current/current members/team members
 
 ### Servers
-- ❌ GET /servers/{uuid}
-- ❌ PATCH /servers/{uuid}
-- ❌ DELETE /servers/{uuid}
+- 8 outils: list/create/get/update/delete/validate/resources/domains
+
+### Projects & Environments
+- 9 outils: list/get/create/update/delete project + list/get/create/delete environment
 
 ### Applications
-- ❌ PATCH /applications/{uuid}
-- ❌ DELETE /applications/{uuid}
-- ❌ GET /applications/{uuid}/envs
-- ❌ POST /applications/{uuid}/envs
-- ❌ PATCH /applications/{uuid}/envs/bulk
-- ❌ PATCH /applications/{uuid}/envs
-- ❌ DELETE /applications/{uuid}/envs/{env_uuid}
-- ❌ POST /applications/public
-- ❌ POST /applications/private-github-app
-- ❌ POST /applications/private-deploy-key
-- ❌ POST /applications/dockerfile
-- ❌ POST /applications/dockerimage
-- ❌ POST /applications/dockercompose
+- 24 outils: CRUD, start/stop/restart, deploy, logs, env vars (single + bulk), deployments, modes de creation (public/private github app/private deploy key/dockerfile/dockerimage/dockercompose)
 
 ### Services
-- ❌ GET /services/{uuid}
-- ❌ PATCH /services/{uuid}
-- ❌ DELETE /services/{uuid}
-- ❌ GET /services/{uuid}/envs
-- ❌ POST /services/{uuid}/envs
-- ❌ PATCH /services/{uuid}/envs/bulk
-- ❌ PATCH /services/{uuid}/envs
-- ❌ DELETE /services/{uuid}/envs/{env_uuid}
+- 14 outils: CRUD, start/stop/restart, env vars (single + bulk), logs (non expose par Coolify)
 
 ### Databases
-- ❌ GET /databases/{uuid}
-- ❌ PATCH /databases/{uuid}
-- ❌ DELETE /databases/{uuid}
-- ❌ GET /databases/{uuid}/start
-- ❌ GET /databases/{uuid}/stop
-- ❌ GET /databases/{uuid}/restart
-- ❌ GET /databases/{uuid}/backups
-- ❌ POST /databases/{uuid}/backups
-- ❌ GET /databases/{uuid}/backups/{scheduled_backup_uuid}/executions
-- ❌ PATCH /databases/{uuid}/backups/{scheduled_backup_uuid}
-- ❌ DELETE /databases/{uuid}/backups/{scheduled_backup_uuid}
-- ❌ DELETE /databases/{uuid}/backups/{scheduled_backup_uuid}/executions/{execution_uuid}
+- 11 outils: list/get/create/update/delete/start/stop/restart/backups + logs (non expose par Coolify)
 
 ### Deployments
-- ❌ POST /deployments/{uuid}/cancel
-- ❌ GET /deployments/applications/{uuid}
+- 3 outils: list/get/cancel
 
 ### Private Keys
-- ❌ GET /security/keys/{uuid}
-- ❌ PATCH /security/keys/{uuid}
-- ❌ DELETE /security/keys/{uuid}
-
-### Cloud Provider Tokens
-- ❌ GET /cloud-tokens
-- ❌ POST /cloud-tokens
-- ❌ GET /cloud-tokens/{uuid}
-- ❌ PATCH /cloud-tokens/{uuid}
-- ❌ DELETE /cloud-tokens/{uuid}
-- ❌ POST /cloud-tokens/{uuid}/validate
+- 5 outils: list/get/create/update/delete
 
 ### GitHub Apps
-- ❌ GET /github-apps
-- ❌ POST /github-apps
-- ❌ PATCH /github-apps/{github_app_id}
-- ❌ DELETE /github-apps/{github_app_id}
-- ❌ GET /github-apps/{github_app_id}/repositories
-- ❌ GET /github-apps/{github_app_id}/repositories/{owner}/{repo}/branches
-
-### Hetzner
-- ❌ GET /hetzner/locations
-- ❌ GET /hetzner/server-types
-- ❌ GET /hetzner/images
-- ❌ GET /hetzner/ssh-keys
-- ❌ POST /servers/hetzner
+- 7 outils: list/get/create/update/delete + repositories + branches
 
 ### Resources
-- ❌ GET /resources
+- 1 outil: list_resources
 
+## Limitations connues (cote API Coolify)
 
+Ces outils existent cote MCP mais retournent volontairement une erreur descriptive car l'API Coolify ne fournit pas ces endpoints:
+- `execute_command`
+- `get_service_logs`
+- `get_database_logs`
 
+## Conclusion
+
+La couche MCP est globalement complete pour les endpoints publics majeurs de Coolify utilises en production.
+Les ecarts restants concernent surtout des APIs specialisees (cloud tokens, Hetzner, backup executions detaillees, endpoints internes).

@@ -1,11 +1,14 @@
 # Coolify MCP Server
 
-[![npm version](https://badge.fury.io/js/coolify-mcp-server.svg)](https://www.npmjs.com/package/coolify-mcp-server)
+[![npm version](https://badge.fury.io/js/coolify-mcp-server-kof70.svg)](https://www.npmjs.com/package/coolify-mcp-server-kof70)
 [![CI](https://github.com/kof70/coolify-mcp-server/actions/workflows/ci.yml/badge.svg)](https://github.com/kof70/coolify-mcp-server/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Node.js Version](https://img.shields.io/node/v/coolify-mcp-server.svg)](https://nodejs.org)
+[![Node.js Version](https://img.shields.io/node/v/coolify-mcp-server-kof70.svg)](https://nodejs.org)
 
 A Model Context Protocol (MCP) server for [Coolify](https://coolify.io) API integration. Control your self-hosted PaaS directly from Claude, Kiro, or any MCP-compatible AI assistant.
+
+**Compatible with Coolify v4.0.0-beta.454+**
+**Official npm package for this repository:** `coolify-mcp-server-kof70`
 
 ## 🚀 Features
 
@@ -23,7 +26,7 @@ A Model Context Protocol (MCP) server for [Coolify](https://coolify.io) API inte
 Run the interactive setup wizard:
 
 ```bash
-npx coolify-mcp-server --setup
+npx coolify-mcp-server-kof70 --setup
 ```
 
 This will:
@@ -34,13 +37,13 @@ This will:
 ### Quick Setup with Arguments
 
 ```bash
-npx coolify-mcp-server --setup --url https://coolify.example.com --token your-token --ide kiro
+npx coolify-mcp-server-kof70 --setup --url https://coolify.example.com --token your-token --ide kiro
 ```
 
 ### Global Installation
 
 ```bash
-npm install -g coolify-mcp-server
+npm install -g coolify-mcp-server-kof70
 coolify-mcp --setup
 ```
 
