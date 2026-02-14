@@ -589,13 +589,18 @@ const allToolDefinitions = [
     inputSchema: {
       type: 'object',
       properties: {
-        name: { type: 'string', description: 'Database name' },
         type: { type: 'string', description: 'Database type (postgresql, mysql, mariadb, mongodb, redis, clickhouse, dragonfly, keydb)' },
+        server_uuid: { type: 'string', description: 'Server UUID' },
         project_uuid: { type: 'string', description: 'Project UUID' },
         environment_name: { type: 'string', description: 'Environment name' },
-        server_uuid: { type: 'string', description: 'Server UUID' }
+        name: { type: 'string', description: 'Database name (optional, auto-generated if not provided)' },
+        description: { type: 'string', description: 'Database description' },
+        image: { type: 'string', description: 'Docker image for the database' },
+        is_public: { type: 'boolean', description: 'Make database publicly accessible' },
+        public_port: { type: 'number', description: 'Public port for the database' },
+        instant_deploy: { type: 'boolean', default: false, description: 'Deploy immediately after creation' }
       },
-      required: ['name', 'type', 'project_uuid', 'environment_name', 'server_uuid']
+      required: ['type', 'server_uuid', 'project_uuid', 'environment_name']
     }
   },
 

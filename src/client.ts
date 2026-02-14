@@ -16,7 +16,7 @@ export class CoolifyClient {
       timeout: 30000
     });
 
-    // Rate limiting interceptor
+    // Error handling interceptor
     this.client.interceptors.response.use(
       (response) => response,
       (error: AxiosError) => {
@@ -26,6 +26,21 @@ export class CoolifyClient {
             ? `Rate limit exceeded. Retry after ${retryAfter}s.`
             : 'Rate limit exceeded. Please wait.';
           throw new Error(`Coolify API rate limit: ${message}`);
+        }
+        // Include API error details in the error message
+        if (error.response?.data) {
+          const apiError = error.response.data as { message?: string; errors?: Record<string, string[]> };
+          let errorMessage = `Request failed with status code ${error.response.status}`;
+          if (apiError.message) {
+            errorMessage += `: ${apiError.message}`;
+          }
+          if (apiError.errors) {
+            const errorDetails = Object.entries(apiError.errors)
+              .map(([field, messages]) => `${field}: ${messages.join(', ')}`)
+              .join('; ');
+            errorMessage += ` - ${errorDetails}`;
+          }
+          throw new Error(errorMessage);
         }
         return Promise.reject(error);
       }

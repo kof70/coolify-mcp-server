@@ -94,7 +94,9 @@ export async function handleTool(
 
     case 'update_server':
       requireParam(args, 'uuid');
-      return client.patch(`/servers/${args.uuid}`, args);
+      // Remove uuid from body as it's already in the URL path
+      const { uuid: _serverUuid, ...serverUpdateArgs } = args;
+      return client.patch(`/servers/${args.uuid}`, serverUpdateArgs);
 
     case 'delete_server':
       requireParam(args, 'uuid');
@@ -134,7 +136,9 @@ export async function handleTool(
 
     case 'update_project':
       requireParam(args, 'uuid');
-      return client.patch(`/projects/${args.uuid}`, args);
+      // Remove uuid from body as it's already in the URL path
+      const { uuid: _projectUuid, ...projectUpdateArgs } = args;
+      return client.patch(`/projects/${args.uuid}`, projectUpdateArgs);
 
     case 'delete_project':
       requireParam(args, 'uuid');
@@ -259,7 +263,9 @@ export async function handleTool(
 
     case 'update_application':
       requireParam(args, 'uuid');
-      return client.patch(`/applications/${args.uuid}`, args);
+      // Remove uuid from body as it's already in the URL path
+      const { uuid: _appUuid, ...appUpdateArgs } = args;
+      return client.patch(`/applications/${args.uuid}`, appUpdateArgs);
 
     case 'delete_application':
       requireParam(args, 'uuid');
@@ -272,12 +278,16 @@ export async function handleTool(
     case 'create_application_env':
       requireParam(args, 'uuid');
       requireParam(args, 'key');
-      return client.post(`/applications/${args.uuid}/envs`, args);
+      // Remove uuid from body as it's already in the URL path
+      const { uuid: _createEnvUuid, ...createEnvArgs } = args;
+      return client.post(`/applications/${args.uuid}/envs`, createEnvArgs);
 
     case 'update_application_env':
       requireParam(args, 'uuid');
       requireParam(args, 'key');
-      return client.patch(`/applications/${args.uuid}/envs`, args);
+      // Remove uuid from body as it's already in the URL path
+      const { uuid: _updateEnvUuid, ...updateEnvArgs } = args;
+      return client.patch(`/applications/${args.uuid}/envs`, updateEnvArgs);
 
     case 'delete_application_env':
       requireParam(args, 'uuid');
@@ -325,7 +335,9 @@ export async function handleTool(
 
     case 'update_service':
       requireParam(args, 'uuid');
-      return client.patch(`/services/${args.uuid}`, args);
+      // Remove uuid from body as it's already in the URL path
+      const { uuid: _serviceUuid, ...serviceUpdateArgs } = args;
+      return client.patch(`/services/${args.uuid}`, serviceUpdateArgs);
 
     case 'delete_service':
       requireParam(args, 'uuid');
@@ -338,12 +350,16 @@ export async function handleTool(
     case 'create_service_env':
       requireParam(args, 'uuid');
       requireParam(args, 'key');
-      return client.post(`/services/${args.uuid}/envs`, args);
+      // Remove uuid from body as it's already in the URL path
+      const { uuid: _createSvcEnvUuid, ...createSvcEnvArgs } = args;
+      return client.post(`/services/${args.uuid}/envs`, createSvcEnvArgs);
 
     case 'update_service_env':
       requireParam(args, 'uuid');
       requireParam(args, 'key');
-      return client.patch(`/services/${args.uuid}/envs`, args);
+      // Remove uuid from body as it's already in the URL path
+      const { uuid: _updateSvcEnvUuid, ...updateSvcEnvArgs } = args;
+      return client.patch(`/services/${args.uuid}/envs`, updateSvcEnvArgs);
 
     case 'delete_service_env':
       requireParam(args, 'uuid');
@@ -360,7 +376,6 @@ export async function handleTool(
       return client.get('/databases');
 
     case 'create_database':
-      requireParam(args, 'name');
       requireParam(args, 'type');
       requireParam(args, 'project_uuid');
       requireParam(args, 'environment_name');
@@ -381,7 +396,9 @@ export async function handleTool(
       if (!endpoint) {
         throw new McpError(ErrorCode.InvalidParams, `Invalid database type: ${dbType}. Valid types are: ${Object.keys(validTypes).join(', ')}`);
       }
-      return client.post(endpoint, args);
+      // Remove 'type' from args as it's not expected by the API
+      const { type: _type, ...dbArgs } = args;
+      return client.post(endpoint, dbArgs);
 
     case 'get_database_logs':
       requireParam(args, 'uuid');
@@ -394,7 +411,9 @@ export async function handleTool(
 
     case 'update_database':
       requireParam(args, 'uuid');
-      return client.patch(`/databases/${args.uuid}`, args);
+      // Remove uuid from body as it's already in the URL path
+      const { uuid: _dbUuid, ...dbUpdateArgs } = args;
+      return client.patch(`/databases/${args.uuid}`, dbUpdateArgs);
 
     case 'delete_database':
       requireParam(args, 'uuid');
@@ -451,7 +470,9 @@ export async function handleTool(
 
     case 'update_private_key':
       requireParam(args, 'uuid');
-      return client.patch(`/security/keys/${args.uuid}`, args);
+      // Remove uuid from body as it's already in the URL path
+      const { uuid: _keyUuid, ...keyUpdateArgs } = args;
+      return client.patch(`/security/keys/${args.uuid}`, keyUpdateArgs);
 
     case 'delete_private_key':
       requireParam(args, 'uuid');
@@ -471,7 +492,9 @@ export async function handleTool(
 
     case 'update_github_app':
       requireParam(args, 'github_app_id');
-      return client.patch(`/github-apps/${args.github_app_id}`, args);
+      // Remove github_app_id from body as it's already in the URL path
+      const { github_app_id: _ghAppId, ...ghAppUpdateArgs } = args;
+      return client.patch(`/github-apps/${args.github_app_id}`, ghAppUpdateArgs);
 
     case 'delete_github_app':
       requireParam(args, 'github_app_id');
