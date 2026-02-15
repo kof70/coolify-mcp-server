@@ -4,6 +4,7 @@
 [![CI](https://github.com/kof70/coolify-mcp-server/actions/workflows/ci.yml/badge.svg)](https://github.com/kof70/coolify-mcp-server/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js Version](https://img.shields.io/node/v/coolify-mcp-server-kof70.svg)](https://nodejs.org)
+[![Visits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fkof70%2Fcoolify-mcp-server&count_bg=%2379C83D&title_bg=%23555555&icon=github.svg&icon_color=%23E7E7E7&title=visits&edge_flat=false)](https://hits.seeyoufarm.com)
 
 A Model Context Protocol (MCP) server for [Coolify](https://coolify.io) API integration. Control your self-hosted PaaS directly from Claude, Kiro, or any MCP-compatible AI assistant.
 
