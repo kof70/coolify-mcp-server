@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
 
-const VERSION = '1.2.0';
+const VERSION = '1.3.0';
 
 interface SetupAnswers {
   url: string;
