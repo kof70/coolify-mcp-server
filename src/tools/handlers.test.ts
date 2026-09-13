@@ -107,24 +107,25 @@ describe('Tool Handlers', () => {
 
     it('should handle start_application', async () => {
       const mockResponse = { message: 'Application started' };
-      vi.mocked(mockClient.get).mockResolvedValue(mockResponse);
+      vi.mocked(mockClient.post).mockResolvedValue(mockResponse);
 
       const result = await handleTool(mockClient, 'start_application', { uuid: 'app1' });
 
-      expect(mockClient.get).toHaveBeenCalledWith('/applications/app1/start');
+      expect(mockClient.post).toHaveBeenCalledWith('/applications/app1/start');
       expect(result).toEqual(mockResponse);
     });
 
     it('should handle deploy_application with force flag', async () => {
       const mockResponse = { deployment_uuid: 'deploy-123' };
-      vi.mocked(mockClient.get).mockResolvedValue(mockResponse);
+      vi.mocked(mockClient.post).mockResolvedValue(mockResponse);
 
       const result = await handleTool(mockClient, 'deploy_application', {
         uuid: 'app1',
         force: true,
       });
 
-      expect(mockClient.get).toHaveBeenCalledWith('/deploy?uuid=app1&force=true');
+      // GET /deploy was retired in Coolify >=4.3 — POST-only now.
+      expect(mockClient.post).toHaveBeenCalledWith('/deploy?uuid=app1&force=true');
       expect(result).toEqual(mockResponse);
     });
 
@@ -196,11 +197,11 @@ describe('Tool Handlers', () => {
     it('should execute dangerous operation without confirmation when COOLIFY_REQUIRE_CONFIRM is not set', async () => {
       delete process.env.COOLIFY_REQUIRE_CONFIRM;
       const mockResponse = { message: 'Application stopped' };
-      vi.mocked(mockClient.get).mockResolvedValue(mockResponse);
+      vi.mocked(mockClient.post).mockResolvedValue(mockResponse);
 
       const result = await handleTool(mockClient, 'stop_application', { uuid: 'app1' });
 
-      expect(mockClient.get).toHaveBeenCalledWith('/applications/app1/stop');
+      expect(mockClient.post).toHaveBeenCalledWith('/applications/app1/stop');
       expect(result).toEqual(mockResponse);
     });
 
@@ -219,11 +220,11 @@ describe('Tool Handlers', () => {
     it('should execute when confirm: true is provided', async () => {
       process.env.COOLIFY_REQUIRE_CONFIRM = 'true';
       const mockResponse = { message: 'Application stopped' };
-      vi.mocked(mockClient.get).mockResolvedValue(mockResponse);
+      vi.mocked(mockClient.post).mockResolvedValue(mockResponse);
 
       const result = await handleTool(mockClient, 'stop_application', { uuid: 'app1', confirm: true });
 
-      expect(mockClient.get).toHaveBeenCalledWith('/applications/app1/stop');
+      expect(mockClient.post).toHaveBeenCalledWith('/applications/app1/stop');
       expect(result).toEqual(mockResponse);
     });
 

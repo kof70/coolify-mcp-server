@@ -247,7 +247,6 @@ Add to your `.kiro/settings/mcp.json`:
 |------|-------------|
 | `list_applications` | List all applications |
 | `get_application` | Get application details |
-| `create_application` | Create a new application |
 | `create_public_application` | Create from a public Git repository |
 | `create_private_github_app_application` | Create from private repo using GitHub App |
 | `create_private_deploy_key_application` | Create from private repo using deploy key |
@@ -264,6 +263,14 @@ Add to your `.kiro/settings/mcp.json`:
 | `execute_command` | Execute command in container |
 | `get_application_logs` | Get application logs |
 | `get_application_deployments` | Get all deployments for an application |
+
+### Application Storages
+| Tool | Description |
+|------|-------------|
+| `get_application_storages` | List persistent/file storages mounted on an application |
+| `create_application_storage` | Mount a persistent volume or a single file |
+| `update_application_storage` | Update an existing mounted storage |
+| `delete_application_storage` | Remove a mounted storage |
 
 ### Application Environment Variables
 | Tool | Description |

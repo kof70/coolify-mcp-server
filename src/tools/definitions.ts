@@ -267,22 +267,6 @@ const allToolDefinitions = [
     }
   },
   {
-    name: 'create_application',
-    description: 'Create a new application',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        project_uuid: { type: 'string', description: 'Project UUID' },
-        environment_name: { type: 'string', description: 'Environment name' },
-        environment_uuid: { type: 'string', description: 'Environment UUID (optional)' },
-        git_repository: { type: 'string', description: 'Git repository URL' },
-        ports_exposes: { type: 'string', description: 'Ports to expose (e.g., "3000,8080")' },
-        destination_uuid: { type: 'string', description: 'Destination server UUID' }
-      },
-      required: ['project_uuid', 'environment_name', 'destination_uuid']
-    }
-  },
-  {
     name: 'create_public_application',
     description: 'Create a new public application from a public Git repository',
     inputSchema: {
@@ -870,6 +854,56 @@ const allToolDefinitions = [
         confirm: { type: 'boolean', description: 'Confirm the dangerous operation (required when COOLIFY_REQUIRE_CONFIRM=true)' }
       },
       required: ['uuid']
+    }
+  },
+  {
+    name: 'get_application_storages',
+    description: 'List persistent/file storages (mounted volumes and files) for an application',
+    inputSchema: {
+      type: 'object',
+      properties: { uuid: { type: 'string', description: 'Application UUID' } },
+      required: ['uuid']
+    }
+  },
+  {
+    name: 'create_application_storage',
+    description: 'Mount a persistent volume or a single file into an application\'s container. For a file (e.g. a service-account JSON), prefer a runtime environment variable when possible — file storages are not exposed in every Coolify UI version.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        uuid: { type: 'string', description: 'Application UUID' },
+        type: { type: 'string', description: '"file" for a single mounted file, or the volume type for a directory' },
+        mount_path: { type: 'string', description: 'Path inside the container, e.g. "/app/config.json"' },
+        content: { type: 'string', description: 'File content (type: file only)' },
+        is_directory: { type: 'boolean', description: 'true for a directory/volume mount, false for a single file' }
+      },
+      required: ['uuid', 'type', 'mount_path']
+    }
+  },
+  {
+    name: 'update_application_storage',
+    description: 'Update an existing persistent/file storage for an application',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        uuid: { type: 'string', description: 'Application UUID' },
+        storage_uuid: { type: 'string', description: 'Storage UUID' },
+        mount_path: { type: 'string', description: 'Path inside the container' },
+        content: { type: 'string', description: 'File content (type: file only)' }
+      },
+      required: ['uuid']
+    }
+  },
+  {
+    name: 'delete_application_storage',
+    description: 'Remove a persistent/file storage from an application',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        uuid: { type: 'string', description: 'Application UUID' },
+        storage_uuid: { type: 'string', description: 'Storage UUID' }
+      },
+      required: ['uuid', 'storage_uuid']
     }
   },
   {

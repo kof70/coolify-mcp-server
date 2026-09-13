@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2026-09-13
+
+Vérifié contre une instance Coolify 4.3.2 réelle (appels live, pas seulement les
+tests mockés) + contre `routes/api.php` d'un fork Coolify local.
+
+### Fixed
+
+- **`GET /deploy` retiré en Coolify ≥4.3** ("This endpoint has changed to a POST
+  request") — `deploy_application` et `deploy` passent en `POST`
+- `start_application` / `stop_application` / `restart_application` et les
+  équivalents `service`/`database` passent en `POST` (le `GET` legacy peut
+  disparaître dans une future version, comme `/deploy`)
+- Suppression de `create_application` (`POST /applications`) — cet endpoint
+  générique n'existe pas dans l'API Coolify, l'outil échouait toujours ; les
+  variantes `create_public_application` / `create_private_github_app_application`
+  / `create_private_deploy_key_application` / `create_dockerfile_application` /
+  `create_dockerimage_application` couvrent tous les cas réels
+
+### Added
+
+- `get_application_storages` / `create_application_storage` /
+  `update_application_storage` / `delete_application_storage` — gestion des
+  volumes/fichiers montés sur une application (`/applications/{uuid}/storages`)
+
 ## [1.3.0] - 2026-01-13
 
 ### Fixed

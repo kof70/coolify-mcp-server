@@ -152,12 +152,6 @@ export async function handleTool(
       requireParam(args, 'uuid');
       return client.get(`/applications/${args.uuid}`);
 
-    case 'create_application':
-      requireParam(args, 'project_uuid');
-      requireParam(args, 'environment_name');
-      requireParam(args, 'destination_uuid');
-      return client.post('/applications', args);
-
     case 'create_public_application':
       requireParam(args, 'project_uuid');
       requireParam(args, 'environment_name');
@@ -216,15 +210,15 @@ export async function handleTool(
 
     case 'start_application':
       requireParam(args, 'uuid');
-      return client.get(`/applications/${args.uuid}/start`);
+      return client.post(`/applications/${args.uuid}/start`);
 
     case 'stop_application':
       requireParam(args, 'uuid');
-      return client.get(`/applications/${args.uuid}/stop`);
+      return client.post(`/applications/${args.uuid}/stop`);
 
     case 'restart_application':
       requireParam(args, 'uuid');
-      return client.get(`/applications/${args.uuid}/restart`);
+      return client.post(`/applications/${args.uuid}/restart`);
 
     case 'deploy_application':
       requireParam(args, 'uuid');
@@ -234,7 +228,8 @@ export async function handleTool(
       if (args.force) deployParams.append('force', 'true');
       if (args.instant_deploy) deployParams.append('instant_deploy', 'true');
       const deployQuery = deployParams.toString();
-      return client.get(`/deploy?${deployQuery}`);
+      // GET /deploy was retired in Coolify >=4.3 ("This endpoint has changed to a POST request").
+      return client.post(`/deploy?${deployQuery}`);
 
     case 'deploy':
       // Generic deploy endpoint supporting uuid and/or tag parameters
@@ -246,7 +241,7 @@ export async function handleTool(
         throw new McpError(ErrorCode.InvalidParams, 'Either uuid or tag parameter is required');
       }
       const genericDeployQuery = genericDeployParams.toString();
-      return client.get(`/deploy?${genericDeployQuery}`);
+      return client.post(`/deploy?${genericDeployQuery}`);
 
     case 'execute_command':
       requireParam(args, 'uuid');
@@ -270,6 +265,29 @@ export async function handleTool(
     case 'delete_application':
       requireParam(args, 'uuid');
       return client.delete(`/applications/${args.uuid}`);
+
+    // Persistent/file storages — e.g. mounting a service-account JSON, a config
+    // file, or a named volume into the application's container.
+    case 'get_application_storages':
+      requireParam(args, 'uuid');
+      return client.get(`/applications/${args.uuid}/storages`);
+
+    case 'create_application_storage':
+      requireParam(args, 'uuid');
+      requireParam(args, 'type');
+      requireParam(args, 'mount_path');
+      const { uuid: _storageAppUuid, ...storageCreateArgs } = args;
+      return client.post(`/applications/${args.uuid}/storages`, storageCreateArgs);
+
+    case 'update_application_storage':
+      requireParam(args, 'uuid');
+      const { uuid: _storageUpdateUuid, ...storageUpdateArgs } = args;
+      return client.patch(`/applications/${args.uuid}/storages`, storageUpdateArgs);
+
+    case 'delete_application_storage':
+      requireParam(args, 'uuid');
+      requireParam(args, 'storage_uuid');
+      return client.delete(`/applications/${args.uuid}/storages/${args.storage_uuid}`);
 
     case 'get_application_envs':
       requireParam(args, 'uuid');
@@ -313,15 +331,15 @@ export async function handleTool(
 
     case 'start_service':
       requireParam(args, 'uuid');
-      return client.get(`/services/${args.uuid}/start`);
+      return client.post(`/services/${args.uuid}/start`);
 
     case 'stop_service':
       requireParam(args, 'uuid');
-      return client.get(`/services/${args.uuid}/stop`);
+      return client.post(`/services/${args.uuid}/stop`);
 
     case 'restart_service':
       requireParam(args, 'uuid');
-      return client.get(`/services/${args.uuid}/restart`);
+      return client.post(`/services/${args.uuid}/restart`);
 
     case 'get_service_logs':
       requireParam(args, 'uuid');
@@ -421,15 +439,15 @@ export async function handleTool(
 
     case 'start_database':
       requireParam(args, 'uuid');
-      return client.get(`/databases/${args.uuid}/start`);
+      return client.post(`/databases/${args.uuid}/start`);
 
     case 'stop_database':
       requireParam(args, 'uuid');
-      return client.get(`/databases/${args.uuid}/stop`);
+      return client.post(`/databases/${args.uuid}/stop`);
 
     case 'restart_database':
       requireParam(args, 'uuid');
-      return client.get(`/databases/${args.uuid}/restart`);
+      return client.post(`/databases/${args.uuid}/restart`);
 
     case 'get_database_backups':
       requireParam(args, 'uuid');
