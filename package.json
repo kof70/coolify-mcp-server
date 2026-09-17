@@ -1,6 +1,6 @@
 {
   "name": "coolify-mcp-server-kof70",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "MCP server for Coolify API - Control your self-hosted PaaS from AI assistants",
   "type": "module",
   "main": "build/index.js",

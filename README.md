@@ -68,6 +68,34 @@ npm run build
 | `COOLIFY_TEAM_ID` | No | Team ID for multi-team setups |
 | `COOLIFY_READONLY` | No | Set to `true` for read-only mode (safe monitoring) |
 | `COOLIFY_REQUIRE_CONFIRM` | No | Set to `true` to require confirmation for dangerous operations |
+| `COOLIFY_ACCOUNTS_FILE` | No | Path to a multi-account config file (default: `~/.config/coolify-mcp/accounts.json`) |
+| `COOLIFY_ACTIVE_ACCOUNT` | No | Which account to activate on startup, if the accounts file doesn't set a `default` |
+
+### 🔀 Multiple accounts / teams / instances
+
+If you manage several Coolify accounts (different teams, or even different
+self-hosted instances), you don't need one MCP server config per account.
+Create `~/.config/coolify-mcp/accounts.json`:
+
+```json
+{
+  "default": "work",
+  "accounts": [
+    { "name": "work", "baseUrl": "https://coolify.example.com", "token": "1|xxxx" },
+    { "name": "client-x", "baseUrl": "https://coolify.client-x.com", "token": "2|yyyy", "teamId": "3" }
+  ]
+}
+```
+
+Then use these tools from your assistant, no server restart required:
+
+- `list_accounts` — shows configured accounts (name, base URL, masked token) and which one is active.
+- `switch_account { name }` — switches every subsequent tool call to that account for the rest of the session.
+- `add_account { name, base_url, token, team_id?, set_default? }` — saves a new account to the file (does not switch to it automatically).
+
+If no accounts file exists, the server falls back to the legacy single-account
+`COOLIFY_BASE_URL`/`COOLIFY_TOKEN` environment variables, exposed as an
+account named `env` — existing single-account setups keep working unchanged.
 
 ### 🔒 Read-Only Mode
 
@@ -201,6 +229,13 @@ Add to your `.kiro/settings/mcp.json`:
 ```
 
 ## 🛠️ Available Tools
+
+### Accounts
+| Tool | Description |
+|------|-------------|
+| `list_accounts` | List configured accounts and show the active one |
+| `switch_account` | Switch the active account for the rest of the session |
+| `add_account` | Save a new named account to the accounts file |
 
 ### Version & Health
 | Tool | Description |

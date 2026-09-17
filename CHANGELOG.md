@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2026-09-17
+
+### Added
+
+- **Comptes multiples (teams / instances) avec switch à chaud** :
+  `list_accounts`, `switch_account`, `add_account`. Fichier local
+  `~/.config/coolify-mcp/accounts.json` (mode 0600, jamais commité) au lieu
+  d'une config MCP par compte — plus besoin de relancer le serveur pour
+  changer de team ou d'instance Coolify en cours de session.
+  Rétrocompatible : sans fichier, `COOLIFY_BASE_URL`/`COOLIFY_TOKEN` restent
+  utilisés tels quels, exposés comme un compte nommé `env`.
+
 ## [1.4.0] - 2026-09-13
 
 Vérifié contre une instance Coolify 4.3.2 réelle (appels live, pas seulement les

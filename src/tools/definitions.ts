@@ -2,6 +2,8 @@
 
 // Read-only tools that only fetch data without modifying anything
 export const READ_ONLY_TOOLS = [
+  'list_accounts',
+  'switch_account',
   'get_version',
   'health_check',
   'list_teams',
@@ -108,6 +110,39 @@ export function getDangerWarning(toolName: string): string {
 
 // All tool definitions
 const allToolDefinitions = [
+  // === Accounts (multi-compte / multi-team, potentiellement multi-instance) ===
+  {
+    name: 'list_accounts',
+    description: 'List configured Coolify accounts/teams available for switching (name, base URL, masked token preview), and show which one is currently active',
+    inputSchema: { type: 'object', properties: {}, required: [] }
+  },
+  {
+    name: 'switch_account',
+    description: 'Switch the active Coolify account for all subsequent tool calls in this session (no server restart needed)',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string', description: 'Account name as returned by list_accounts' }
+      },
+      required: ['name']
+    }
+  },
+  {
+    name: 'add_account',
+    description: 'Add or update a named Coolify account (base URL + API token, optionally a team ID) in the local accounts file, so it becomes available to switch_account. Does not switch to it automatically.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string', description: 'Short unique name to refer to this account later (e.g. "client-x-prod")' },
+        base_url: { type: 'string', description: 'Coolify instance base URL, e.g. https://coolify.example.com' },
+        token: { type: 'string', description: 'Coolify API token for this account/team' },
+        team_id: { type: 'string', description: 'Optional team ID if the token has access to multiple teams' },
+        set_default: { type: 'boolean', description: 'Also make this the default account used on next server startup' }
+      },
+      required: ['name', 'base_url', 'token']
+    }
+  },
+
   // === Version & Health ===
   {
     name: 'get_version',
